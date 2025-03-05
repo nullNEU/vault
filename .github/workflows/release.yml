@@ -1,0 +1,32 @@
+name: release
+run-name: Create a new release
+
+on:
+  # allow the workflow to be run from the Github Actions UI
+  workflow_dispatch:
+  # trigger the workflow run when a 'push' event happens to a tag with semantic versioning
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  # call the build job (reuse from earlier workflow)
+  build:
+    uses: ./.github/workflows/build.yml
+  # the release job that will create a new release of all built OS images
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository to the runner
+        uses: actions/checkout@v4
+      # one set of statements for each OS image that needs to be downloaded
+      # and included in the next release
+      - name: Download the vault-ubuntu-minimal artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vault-ubuntu-minimal
+      - name: Create a new release with latest images for all OSes
+        uses: softprops/action-gh-release@v2
+        with:
+          files: vault-ubuntu-minimal.iso

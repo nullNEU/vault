@@ -1,0 +1,33 @@
+name: build
+run-name: Create patched ISO images
+
+on:
+  # allow the workflow to be called from another workflow
+  workflow_call:
+  # allow the workflow to be run from the Github Actions UI
+  workflow_dispatch:
+  # trigger the workflow when a 'push' event happens to any branch except the main branch
+  push:
+    branches:
+      - '**'
+      - '!main'
+
+jobs:
+  # the build job to run the build script
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository to the runner
+        uses: actions/checkout@v4
+      - name: Make the build script executable
+        run: chmod u+x scripts/build.sh
+      - name: Install dependent packages
+        run: sudo apt install -y p7zip-full p7zip-rar genisoimage fakeroot xorriso isolinux binutils squashfs-tools
+      - name: Run the build script
+        run: scripts/build.sh
+      # one set of upload statements for each OS image artifact
+      - name: Upload the vault-ubuntu-minimal artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vault-ubuntu-minimal
+          path: vault-ubuntu-minimal.iso
