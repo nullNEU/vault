@@ -20,7 +20,7 @@ assign_file_name () {
 # function to create builds for all linux operating systems in scope
 build_linux_oses () {
     # array of URLs pointing to the base images of the operating system being handled
-    # give official, downloadable URLs, prefarably from the same source as provided in the README
+    # give official, downloadable URLs, preferably from the same source as provided in the README
     declare -a LINUXIMAGES=(
         "https://releases.ubuntu.com/22.04.5/ubuntu-22.04.5-live-server-amd64.iso"
     )
@@ -32,7 +32,7 @@ build_linux_oses () {
     )
 
     # array of patched operating system names
-    # prefarably in the `vault-<base-operating-system>` format
+    # preferably in the `vault-<base-operating-system>` format
     declare -a VAULTLINUXOSES=(
         "vault-ubuntu-minimal"
     )
